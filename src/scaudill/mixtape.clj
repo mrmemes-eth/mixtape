@@ -1,7 +1,15 @@
 (ns scaudill.mixtape
-  (:require [clojure.tools.cli :as cli-tools]
-            [clojure.string :as str])
+  (:require [clojure.data.json :as json]
+            [clojure.java.io :as io]
+            [clojure.string :as str]
+            [clojure.tools.cli :as cli-tools])
   (:gen-class))
+
+
+(defn mixtape
+  [filename]
+  (let [file (io/as-relative-path filename)]
+    (json/read-str (slurp file))))
 
 (def cli-options
   [["-t" "--mixtape MIXTAPE.JSON" "Path to your mixtape JSON file."
