@@ -1,4 +1,6 @@
-(ns scaudill.mixtape.manipulate)
+(ns scaudill.mixtape.manipulate
+  "Functions that operate on the mixtape data. They abide loosely by reducer
+   conventions, which makes them easy to compose.")
 
 (defn next-val
   "Get the next value from a sequential series identified by `key`"
@@ -16,6 +18,11 @@
   "Add the song specified by its id to the playlist specified by its id."
   [data {:keys [playlist_id song_id]}]
   ;; grouping the playlists by id makes updating the data easier to reason about:
+  ;; it flips them to look something like this:
+  ;; {1 [{:id 1 :user_id 3 :song_ids [3 12 15]}
+  ;;  2 [{:id 2 :user_id 2 :song_ids [2]}]
+  ;;  3 [{:id 3 :user_id 7 :song_ids [15 15 15 15]}]}
+  ;; which means that it's easy to address them by id
   (let [grouped-playlists (group-by :id (:playlists data))
         ;; actually do the update, ensuring that the playlist exists
         updated-playlists (if (get grouped-playlists playlist_id)

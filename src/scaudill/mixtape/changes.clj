@@ -1,4 +1,5 @@
 (ns scaudill.mixtape.changes
+  "Bridge namespace for applying change functions specified in the data format."
   (:require [scaudill.mixtape.manipulate :as manipulate]))
 
 (def command-fns
