@@ -26,6 +26,10 @@ Run that uberjar:
 
     $ java -jar mixtape.jar
 
+Pretty printing the JSON using python's readily available and fast printer:
+
+    $ less output.json|python -m json.tool
+
 ## Options
 
 FIXME: listing of options this app accepts.
