@@ -1,60 +1,9 @@
 (ns scaudill.mixtape
-  (:require [clojure.data.json :as json]
-            [clojure.java.io :as io]
-            [clojure.string :as str]
-            [clojure.tools.cli :as cli-tools])
+  (:require [clojure.string :as str]
+            [clojure.tools.cli :as cli-tools]
+            [scaudill.mixtape.manipulate :as manipulate]
+            [scaudill.mixtape.parse :as parse])
   (:gen-class))
-
-(defn- id-like?
-  [n]
-  (re-find #"^\d+$" n))
-
-(defn value-fn
-  "This attempts to deserialize values into their (likely) source types... in
-  the future, we could use the `property-name` arg to special case handling, if
-  necessary."
-  [_ value]
-  (cond
-    (string? value) (if (id-like? value)
-                      (Integer/parseInt value)
-                      value)
-    (vector? value) (mapv (partial value-fn nil) value)
-    (map? value) (reduce-kv (fn [m k v]
-                              (assoc m k (value-fn k v)))
-                            {} value)
-    :else value))
-
-(defn next-val
-  "Get the next value from a sequential series identified by `key`"
-  [k coll]
-  (inc (apply max (map k coll))))
-
-(defn append-playlist
-  "Takes data and a playlist data structure to append. Adds the playlist with a
-   new playlist id."
-  [data playlist]
-  (let [playlist-id (next-val :id (:playlists data))]
-    (update data :playlists conj (assoc playlist :id playlist-id))))
-
-(defn add-song-to-playlist
-  [data playlist-id song-id]
-  ;; grouping the playlists by id makes updating the data easier to reason about:
-  (let [grouped-playlists (group-by :id (:playlists data))
-        ;; actually do the update
-        updated-playlists (update-in grouped-playlists [playlist-id 0 :song_ids] conj song-id)
-        ;; then "de-group" again:
-        playlists (map first (vals updated-playlists))]
-    (assoc data :playlists playlists)))
-
-(defn remove-playlist
-  [data id]
-  (let [matching (fn [id playlist] (= (:id playlist) id))]
-    (update data :playlists #(remove (partial matching id) %))))
-
-(defn parse
-  [filename]
-  (let [file (io/as-relative-path filename)]
-    (json/read-str (slurp file) :key-fn keyword :value-fn value-fn)))
 
 (def cli-options
   [["-t" "--mixtape MIXTAPE.JSON" "Path to your mixtape JSON file."
