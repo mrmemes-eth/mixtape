@@ -25,3 +25,7 @@
   [filename]
   (let [file (io/as-relative-path filename)]
     (json/read-str (slurp file) :key-fn keyword :value-fn value-fn)))
+
+(defn unparse
+  [data]
+  (json/write-str data))
