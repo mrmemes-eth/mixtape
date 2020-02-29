@@ -78,7 +78,7 @@ easy to access with the readily available tools for parsing JSON. There's a
 business case to be made for doing just that, but unless this data format was
 expected to be broadly used externally, I would argue for changing the data
 format to something that is natively friendly to stream over the wire. I would
-make the same argument for any JSON format that made use of large arrays close
+make the same argument for any JSON data structure that made use of large arrays close
 to the top of the data structure... this is a tell tale sign that the object is
 asking for a different representation.
 
