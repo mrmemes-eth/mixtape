@@ -13,6 +13,7 @@
     (update data :playlists conj (assoc playlist :id playlist-id))))
 
 (defn add-song-to-playlist
+  "Add the song specified by its id to the playlist specified by its id."
   [data {:keys [playlist_id song_id]}]
   ;; grouping the playlists by id makes updating the data easier to reason about:
   (let [grouped-playlists (group-by :id (:playlists data))
@@ -25,6 +26,7 @@
     (assoc data :playlists playlists)))
 
 (defn remove-playlist
+  "Remove a playlist, identified by its id."
   [data id]
   (let [matching (fn [id playlist] (= (:id playlist) id))]
     (update data :playlists #(remove (partial matching id) %))))
