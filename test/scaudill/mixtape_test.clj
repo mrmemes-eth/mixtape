@@ -48,3 +48,12 @@
                 :user_id 3
                 :song_ids [3 12 15]}
                (last (:playlists result))))))))
+
+(deftest remove-playlist-test
+  (let [playlists (:playlists (mixtape/remove-playlist json 1))]
+    (is (= 2 (count playlists)))
+    (is (= {:id 2
+            :user_id 3
+            :song_ids [6 8 11]}
+           (first playlists)))
+    (is (= [2 3] (map :id playlists)))))

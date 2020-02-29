@@ -36,6 +36,11 @@
   (let [playlist-id (next-val :id (:playlists data))]
     (update data :playlists conj (assoc playlist :id playlist-id))))
 
+(defn remove-playlist
+  [data id]
+  (let [matching (fn [id playlist] (= (:id playlist) id))]
+    (update data :playlists #(remove (partial matching id) %))))
+
 (defn parse
   [filename]
   (let [file (io/as-relative-path filename)]
