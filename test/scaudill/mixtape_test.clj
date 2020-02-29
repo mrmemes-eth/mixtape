@@ -57,3 +57,18 @@
             :song_ids [6 8 11]}
            (first playlists)))
     (is (= [2 3] (map :id playlists)))))
+
+(deftest add-song-to-playlist-test
+  (let [data {:playlists [{:id 1
+                           :user_id 3
+                           :song_ids [6 8 11]}
+                          {:id 2
+                           :user_id 4
+                           :song_ids [6 8 13]}]}
+        expected {:playlists [{:id 1
+                               :user_id 3
+                               :song_ids [6 8 11]}
+                              {:id 2
+                               :user_id 4
+                               :song_ids [6 8 13 10]}]}]
+    (is (= expected (mixtape/add-song-to-playlist data 2 10)))))
