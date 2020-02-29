@@ -1,4 +1,5 @@
 (ns scaudill.mixtape
+  "Command line interface and entrypoint for the application."
   (:require [clojure.string :as str]
             [clojure.tools.cli :as cli-tools]
             [scaudill.mixtape.changes :as changes]
@@ -17,6 +18,7 @@
    ["-h" "--help"]])
 
 (defn exit
+  "Print the message then exit with the status"
   [status message]
   (println message)
   (System/exit status))
@@ -26,7 +28,7 @@
   [& args]
   (let [{:keys [options errrors summary errors]} (cli-tools/parse-opts args cli-options)]
     (cond
-      (:help options) (println summary)
+      (:help options) (exit 0 summary)
       errors (->> (str/join \newline errors)
                   (str "The following errors occurred:\n\n")
                   (exit 1)))
