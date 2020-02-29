@@ -49,4 +49,4 @@
                               {:id 2
                                :user_id 4
                                :song_ids [6 8 13 10]}]}]
-    (is (= expected (manipulate/add-song-to-playlist data 2 10)))))
+    (is (= expected (manipulate/add-song-to-playlist data {:playlist_id 2 :song_id 10})))))

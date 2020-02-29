@@ -1,0 +1,10 @@
+{"add_song_to_playlist": [
+    {"playlist_id": "1", "song_id": "15"},
+    {"playlist_id": "2", "song_id": "15"},
+    {"playlist_id": "3", "song_id": "15"}
+  ],
+  "add_playlist": [
+    {"user_id": 3, "song_ids": ["3", "12", "15"]},
+    {"user_id": 7, "song_ids": ["3", "12", "15"]}
+  ],
+  "remove_playlist": ["1", "2"]}

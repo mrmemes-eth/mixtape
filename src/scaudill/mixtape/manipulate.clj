@@ -13,11 +13,11 @@
     (update data :playlists conj (assoc playlist :id playlist-id))))
 
 (defn add-song-to-playlist
-  [data playlist-id song-id]
+  [data {:keys [playlist_id song_id]}]
   ;; grouping the playlists by id makes updating the data easier to reason about:
   (let [grouped-playlists (group-by :id (:playlists data))
         ;; actually do the update
-        updated-playlists (update-in grouped-playlists [playlist-id 0 :song_ids] conj song-id)
+        updated-playlists (update-in grouped-playlists [playlist_id 0 :song_ids] conj song_id)
         ;; then "de-group" again:
         playlists (map first (vals updated-playlists))]
     (assoc data :playlists playlists)))
