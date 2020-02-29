@@ -25,4 +25,17 @@
           expected {:playlists [{:id 1 :user_id 3 :song_ids [3 12 15 15]}
                                 {:id 2 :user_id 2 :song_ids [2 15]}
                                 {:id 3 :user_id 7 :song_ids [15 15 15 15 15]}]}]
+      (is (= expected (changes/apply-changes data changes)))))
+  (testing "apply all changes"
+    (let [data {:playlists [{:id 1 :user_id 3 :song_ids [3 12 15]}
+                            {:id 2 :user_id 2 :song_ids [2]}
+                            {:id 3 :user_id 7 :song_ids [15 15 15 15]}]}
+          changes {:add_playlist [{:user_id 5 :song_ids [40 39 38]}]
+                   :remove_playlist [2]
+                   :add_song_to_playlist [{:playlist_id 1 :song_id 15}
+                                          {:playlist_id 2 :song_id 15}
+                                          {:playlist_id 3 :song_id 15}]}
+          expected {:playlists [{:id 1 :user_id 3 :song_ids [3 12 15 15]}
+                                {:id 3 :user_id 7 :song_ids [15 15 15 15 15]}
+                                {:id 4 :user_id 5 :song_ids [40 39 38]}]}]
       (is (= expected (changes/apply-changes data changes))))))

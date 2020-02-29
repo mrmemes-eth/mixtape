@@ -6,9 +6,10 @@
    :add_song_to_playlist manipulate/add-song-to-playlist
    :remove_playlist manipulate/remove-playlist})
 
+(defn command-applicator
+  [acc command command-data]
+  (reduce (partial (command command-matrix)) acc command-data))
+
 (defn apply-changes
   [data changes]
-  (first ;; this `first` is a bit gross, but maybe not unforgivably so?
-   (for [[command command-data] changes
-         :let [command-fn (command command-matrix)]]
-     (reduce (partial command-fn) data command-data))))
+  (reduce-kv command-applicator data changes))

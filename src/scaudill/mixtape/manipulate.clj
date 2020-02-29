@@ -16,8 +16,10 @@
   [data {:keys [playlist_id song_id]}]
   ;; grouping the playlists by id makes updating the data easier to reason about:
   (let [grouped-playlists (group-by :id (:playlists data))
-        ;; actually do the update
-        updated-playlists (update-in grouped-playlists [playlist_id 0 :song_ids] conj song_id)
+        ;; actually do the update, ensuring that the playlist exists
+        updated-playlists (if (get grouped-playlists playlist_id)
+                            (update-in grouped-playlists [playlist_id 0 :song_ids] conj song_id)
+                            grouped-playlists)
         ;; then "de-group" again:
         playlists (map first (vals updated-playlists))]
     (assoc data :playlists playlists)))
