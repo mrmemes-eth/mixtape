@@ -4,7 +4,7 @@
             [clojure.java.io :as io]
             [clojure.data.json :as json]))
 
-(def json (mixtape/data "resources/mixtape.json"))
+(def json (mixtape/parse "resources/mixtape.json"))
 
 (deftest general-parsing-test
   (let [users (:users json)]
@@ -26,3 +26,25 @@
             :artist "Kendrick Lamar"
             :title "All The Stars"}
            all-the-stars))))
+
+(deftest next-val-test
+  (is (= 4 (mixtape/next-val :id [{:id 1} {:id 2} {:id 3}])))
+  (is (= 200 (mixtape/next-val :ok [{:ok 199}]))))
+
+(deftest add-playlist-test
+  (let [playlists (get json :playlists)]
+    (testing "before adding playlist"
+      (is (= 3 (count playlists)))
+      (is (= {:id 3
+              :user_id 7
+              :song_ids [7 12 13 16 2]}
+             (last playlists))))
+    (testing "after adding playlist"
+      (let [playlist {:user_id 3
+                      :song_ids [3 12 15]}
+            result (mixtape/append-playlist json playlist)]
+        (is (= 4 (count (:playlists result))))
+        (is (= {:id 4
+                :user_id 3
+                :song_ids [3 12 15]}
+               (last (:playlists result))))))))

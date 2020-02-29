@@ -24,7 +24,19 @@
                             {} value)
     :else value))
 
-(defn data
+(defn next-val
+  "Get the next value from a sequential series identified by `key`"
+  [k coll]
+  (inc (apply max (map k coll))))
+
+(defn append-playlist
+  "Takes data and a playlist data structure to append. Adds the playlist with a
+   new playlist id."
+  [data playlist]
+  (let [playlist-id (next-val :id (:playlists data))]
+    (update data :playlists conj (assoc playlist :id playlist-id))))
+
+(defn parse
   [filename]
   (let [file (io/as-relative-path filename)]
     (json/read-str (slurp file) :key-fn keyword :value-fn value-fn)))
