@@ -5,11 +5,29 @@
             [clojure.tools.cli :as cli-tools])
   (:gen-class))
 
+(defn- id-like?
+  [n]
+  (re-find #"^\d+$" n))
 
-(defn mixtape
+(defn value-fn
+  "This attempts to deserialize values into their (likely) source types... in
+  the future, we could use the `property-name` arg to special case handling, if
+  necessary."
+  [_ value]
+  (cond
+    (string? value) (if (id-like? value)
+                      (Integer/parseInt value)
+                      value)
+    (vector? value) (mapv (partial value-fn nil) value)
+    (map? value) (reduce-kv (fn [m k v]
+                              (assoc m k (value-fn k v)))
+                            {} value)
+    :else value))
+
+(defn data
   [filename]
   (let [file (io/as-relative-path filename)]
-    (json/read-str (slurp file))))
+    (json/read-str (slurp file) :key-fn keyword :value-fn value-fn)))
 
 (def cli-options
   [["-t" "--mixtape MIXTAPE.JSON" "Path to your mixtape JSON file."
